@@ -1,0 +1,434 @@
+```html
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pembiasan Cahaya - Pop Up Book Edukatif</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700;900&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            color: #333;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .presentation-container {
+            width: 960px;
+            height: 540px; /* 16:9 Aspect Ratio */
+            position: relative;
+            perspective: 2000px;
+            box-shadow: 0 30px 50px rgba(0,0,0,0.5);
+            border-radius: 20px;
+            background: #fff;
+            overflow: hidden;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #f4f7f6;
+            opacity: 0;
+            visibility: hidden;
+            transform: rotateY(-90deg) scale(0.8);
+            transform-origin: left center;
+            transition: all 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            text-align: center;
+            z-index: 1;
+        }
+
+        .slide.active {
+            opacity: 1;
+            visibility: visible;
+            transform: rotateY(0deg) scale(1);
+            z-index: 10;
+        }
+
+        .slide.prev {
+            transform: rotateY(90deg) scale(0.8);
+            transform-origin: right center;
+        }
+
+        /* Background Varieties per slide */
+        #slide-1 { background: radial-gradient(circle, #ffe259, #ffa751); }
+        #slide-2 { background: radial-gradient(circle, #a1c4fd, #c2e9fb); }
+        #slide-3 { background: radial-gradient(circle, #84fab0, #8fd3f4); }
+        #slide-4 { background: radial-gradient(circle, #ffecd2, #fcb69f); }
+        #slide-5 { background: radial-gradient(circle, #cfd9df, #e2ebf0); }
+        #slide-6 { background: radial-gradient(circle, #fbc2eb, #a6c1ee); }
+        #slide-7 { background: radial-gradient(circle, #fdcbf1, #e6dee9); }
+        #slide-8 { background: radial-gradient(circle, #a18cd1, #fbc2eb); }
+        #slide-9 { background: radial-gradient(circle, #ff9a9e, #fecfef); }
+        #slide-10 { background: radial-gradient(circle, #f6d365, #fda085); }
+        #slide-11 { background: radial-gradient(circle, #84fab0, #8fd3f4); }
+        #slide-12 { background: radial-gradient(circle, #00c6ff, #0072ff); color: white;}
+
+        /* Typography */
+        h1, h2 {
+            font-family: 'Fredoka One', cursive;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            line-height: 1.2;
+        }
+
+        h1 { font-size: 4rem; color: #ff3366; }
+        h2 { font-size: 3rem; color: #2c3e50; }
+        
+        p, li {
+            font-size: 1.5rem;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            font-weight: 700;
+            color: #4a4a4a;
+        }
+        
+        #slide-12 h1, #slide-12 p { color: white; }
+
+        ul {
+            text-align: left;
+            margin: 20px auto;
+            max-width: 800px;
+            background: rgba(255,255,255,0.7);
+            padding: 30px 50px;
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            transform: translateZ(50px);
+        }
+
+        /* 3D Pop Up Elements */
+        .pop-up-element {
+            transform: scale(0);
+            transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition-delay: 0.5s;
+        }
+
+        .active .pop-up-element {
+            transform: scale(1);
+        }
+        
+        .box-3d {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 20px 20px 60px #d9d9d9, -20px -20px 60px #ffffff;
+            border: 4px solid #fff;
+            transform-style: preserve-3d;
+            transform: translateZ(100px);
+        }
+
+        /* Navigation Buttons */
+        .nav-controls {
+            position: absolute;
+            bottom: 20px;
+            right: 30px;
+            z-index: 100;
+            display: flex;
+            gap: 15px;
+        }
+
+        button {
+            background: #ff4757;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 1.2rem;
+            font-family: 'Fredoka One', cursive;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 8px 15px rgba(255, 71, 87, 0.4);
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        button:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 12px 20px rgba(255, 71, 87, 0.6);
+            background: #ff6b81;
+        }
+
+        button:active {
+            transform: translateY(2px);
+        }
+        
+        button:disabled {
+            background: #ccc;
+            box-shadow: none;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Progress Bar */
+        .progress-bar-container {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 8px;
+            background: rgba(255,255,255,0.3);
+            z-index: 100;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: #2ed573;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        /* Graphics/Icons (CSS drawn for simplicity/no external assets) */
+        .icon-light {
+            font-size: 5rem;
+            margin: 20px;
+            display: inline-block;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+
+        .decorative-shape {
+            position: absolute;
+            opacity: 0.2;
+            z-index: -1;
+        }
+        .circle-1 { width: 200px; height: 200px; border-radius: 50%; background: white; top: -50px; left: -50px; }
+        .circle-2 { width: 300px; height: 300px; border-radius: 50%; background: white; bottom: -100px; right: -50px; }
+    </style>
+</head>
+<body>
+
+    <div class="presentation-container" id="presentation">
+        
+        <div class="progress-bar-container">
+            <div class="progress-bar" id="progress"></div>
+        </div>
+
+        <div class="nav-controls">
+            <button id="prevBtn" onclick="prevSlide()" disabled>Kembali</button>
+            <button id="nextBtn" onclick="nextSlide()">Lanjut ✨</button>
+        </div>
+
+        <!-- Slide 1: Cover -->
+        <div class="slide active" id="slide-1">
+            <div class="decorative-shape circle-1"></div>
+            <div class="decorative-shape circle-2"></div>
+            <div class="pop-up-element">
+                <div class="icon-light">🔦🌈</div>
+                <h1>Pembiasan Cahaya</h1>
+                <p>Jelajahi Rahasia Cahaya yang Menakjubkan!</p>
+                <div class="box-3d" style="margin-top:20px; padding: 15px; font-size: 1.2rem; color: #e15f41;">
+                    Materi IPA SMP Seru & Interaktif 🚀
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2: Capaian -->
+        <div class="slide" id="slide-2">
+            <div class="pop-up-element box-3d">
+                <h2>🎯 Capaian Pembelajaran</h2>
+                <p>Kamu akan mampu memahami fenomena pembiasan cahaya, mengenali sifat-sifatnya, dan melihat bagaimana ini bekerja dalam kehidupan sehari-hari kita dengan seru!</p>
+            </div>
+        </div>
+
+        <!-- Slide 3: Tujuan -->
+        <div class="slide" id="slide-3">
+            <div class="pop-up-element">
+                <h2>🚀 Tujuan Pembelajaran</h2>
+                <ul>
+                    <li>✨ Menjelaskan apa itu pembiasan cahaya</li>
+                    <li>✨ Menyebutkan sifat-sifat pembiasan</li>
+                    <li>✨ Memahami Hukum Snellius dan Indeks Bias</li>
+                    <li>✨ Menemukan contohnya di sekitarmu!</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 4: Pengertian -->
+        <div class="slide" id="slide-4">
+            <div class="pop-up-element">
+                <h2>Apa itu Pembiasan Cahaya? 🤔</h2>
+                <div class="box-3d">
+                    <p style="color:#2f3542;">Pembiasan cahaya adalah <b>pembelokan arah rambat cahaya</b> ketika cahaya melewati dua medium (zat) yang berbeda kerapatannya.</p>
+                    <div class="icon-light" style="font-size:3rem;">🌬️ ➔ 💧</div>
+                    <p style="font-size:1.2rem;">Contoh: Dari udara masuk ke dalam air!</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: Sifat 1 -->
+        <div class="slide" id="slide-5">
+            <div class="pop-up-element box-3d">
+                <h2>Sifat Pembiasan #1 🔍</h2>
+                <h3 style="color:#e15f41; font-size: 2rem; margin: 15px 0;">Mendekati Garis Normal</h3>
+                <p>Jika cahaya merambat dari medium <b>kurang rapat</b> (udara) ke medium <b>lebih rapat</b> (air/kaca), maka cahaya akan dibiaskan <b>mendekati</b> garis normal.</p>
+                <div style="font-size:3rem;">⬇️ ↘️</div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Sifat 2 -->
+        <div class="slide" id="slide-6">
+            <div class="pop-up-element box-3d">
+                <h2>Sifat Pembiasan #2 🔍</h2>
+                <h3 style="color:#3742fa; font-size: 2rem; margin: 15px 0;">Menjauhi Garis Normal</h3>
+                <p>Jika cahaya merambat dari medium <b>lebih rapat</b> (kaca) ke medium <b>kurang rapat</b> (udara), maka cahaya akan dibiaskan <b>menjauhi</b> garis normal.</p>
+                <div style="font-size:3rem;">↗️ ➡️</div>
+            </div>
+        </div>
+
+        <!-- Slide 7: Hukum Snellius -->
+        <div class="slide" id="slide-7">
+            <div class="pop-up-element">
+                <h2>📜 Hukum Snellius</h2>
+                <ul>
+                    <li>1️⃣ Sinar datang, sinar bias, dan garis normal terletak pada satu bidang datar.</li>
+                    <li>2️⃣ Perbandingan sinus sudut datang (i) dengan sinus sudut bias (r) merupakan suatu bilangan tetap (Indeks Bias).</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 8: Indeks Bias (Penjelasan) -->
+        <div class="slide" id="slide-8">
+            <div class="pop-up-element box-3d">
+                <h2>📏 Indeks Bias (n)</h2>
+                <p>Adalah nilai yang menunjukkan seberapa besar suatu medium membelokkan cahaya.</p>
+                <div style="background:#ffebd2; padding:15px; border-radius:15px; margin: 20px 0;">
+                    <p style="margin:0; color:#d35400;"><b>Semakin rapat mediumnya, semakin besar indeks biasnya!</b></p>
+                </div>
+                <p style="font-size:1.2rem;">Indeks Bias Udara = 1<br>Indeks Bias Air = 1.33</p>
+            </div>
+        </div>
+
+        <!-- Slide 9: Contoh 1 -->
+        <div class="slide" id="slide-9">
+            <div class="pop-up-element">
+                <h2>Kehidupan Sehari-hari 🥤</h2>
+                <div class="box-3d">
+                    <h3 style="color:#16a085; font-size:2rem; margin-bottom:10px;">Sedotan Tampak Patah</h3>
+                    <p>Pernah lihat sedotan di dalam gelas berisi air? Sedotan terlihat bengkok atau patah di batas air karena cahaya dari bagian sedotan di dalam air dibelokkan saat menuju mata kita!</p>
+                    <div style="font-size: 4rem;">🥛</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10: Contoh 2 -->
+        <div class="slide" id="slide-10">
+            <div class="pop-up-element">
+                <h2>Kehidupan Sehari-hari 🏊‍♂️</h2>
+                <div class="box-3d">
+                    <h3 style="color:#2980b9; font-size:2rem; margin-bottom:10px;">Kolam Tampak Dangkal</h3>
+                    <p>Kolam renang atau sungai yang jernih selalu terlihat lebih dangkal dari aslinya. Ini adalah trik ilusi dari pembiasan cahaya!</p>
+                    <div style="font-size: 4rem;">🩱</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Slide 11: Contoh 3 / Pelangi -->
+        <div class="slide" id="slide-11">
+            <div class="pop-up-element">
+                <h2>Kehidupan Sehari-hari 🌈</h2>
+                <div class="box-3d">
+                    <h3 style="color:#8e44ad; font-size:2rem; margin-bottom:10px;">Terbentuknya Pelangi</h3>
+                    <p>Cahaya matahari yang putih dibiaskan dan diuraikan oleh rintik air hujan di udara, membentuk warna-warni pelangi yang indah!</p>
+                    <div style="font-size: 4rem;">🌦️🌈</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 12: Penutup -->
+        <div class="slide" id="slide-12">
+            <div class="pop-up-element">
+                <div class="icon-light" style="font-size:5rem;">🎓🎉</div>
+                <h1>Luar Biasa!</h1>
+                <p>Kamu telah menyelesaikan materi Pembiasan Cahaya.</p>
+                <div class="box-3d" style="color:#333; margin-top:30px;">
+                    <p>Sampai jumpa di petualangan sains selanjutnya!</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 12;
+
+        function updateSlides() {
+            for (let i = 1; i <= totalSlides; i++) {
+                const slide = document.getElementById(`slide-${i}`);
+                if (i === currentSlide) {
+                    slide.className = 'slide active';
+                } else if (i < currentSlide) {
+                    slide.className = 'slide prev';
+                } else {
+                    slide.className = 'slide';
+                }
+            }
+
+            // Update Progress Bar
+            const progress = ((currentSlide - 1) / (totalSlides - 1)) * 100;
+            document.getElementById('progress').style.width = `${progress}%`;
+
+            // Update Buttons
+            document.getElementById('prevBtn').disabled = currentSlide === 1;
+            
+            const nextBtn = document.getElementById('nextBtn');
+            if (currentSlide === totalSlides) {
+                nextBtn.innerText = "Selesai 🏁";
+                nextBtn.disabled = true;
+            } else {
+                nextBtn.innerText = "Lanjut ✨";
+                nextBtn.disabled = false;
+            }
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides) {
+                currentSlide++;
+                updateSlides();
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 1) {
+                currentSlide--;
+                updateSlides();
+            }
+        }
+
+        // Initialize
+        updateSlides();
+    </script>
+</body>
+</html>
+```
