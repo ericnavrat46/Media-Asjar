@@ -1,434 +1,1232 @@
-```html
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pembiasan Cahaya - Pop Up Book Edukatif</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Petualangan Pembiasan Cahaya</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;700&family=Poppins:wght@400;600&display=swap"
+        rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700;900&display=swap');
+        :root {
+            --ac: #06B6D4;
+            --bg: radial-gradient(circle at 80% 10%, #0e4a6e, transparent 50%), #0F172A
+        }
 
         * {
-            margin: 0;
-            padding: 0;
             box-sizing: border-box;
+            margin: 0;
+            font-family: Poppins, sans-serif
         }
 
         body {
-            font-family: 'Nunito', sans-serif;
-            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            background: #020617;
             height: 100vh;
-            overflow: hidden;
-            color: #333;
+            overflow: hidden
         }
 
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        .presentation-container {
-            width: 960px;
-            height: 540px; /* 16:9 Aspect Ratio */
-            position: relative;
-            perspective: 2000px;
-            box-shadow: 0 30px 50px rgba(0,0,0,0.5);
-            border-radius: 20px;
-            background: #fff;
-            overflow: hidden;
-        }
-
-        .slide {
+        #st {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #f4f7f6;
-            opacity: 0;
-            visibility: hidden;
-            transform: rotateY(-90deg) scale(0.8);
-            transform-origin: left center;
-            transition: all 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            left: 50%;
+            top: 50%;
+            width: 1280px;
+            height: 720px;
+            transform-origin: 0 0;
+            overflow: hidden;
+            color: #e2e8f0;
+            background: var(--bg);
+            perspective: 1800px
+        }
+
+        #st[data-t=b] {
+            --ac: #F59E0B;
+            --bg: radial-gradient(circle at 12% 95%, #FF6B6B40, transparent 45%), radial-gradient(circle at 88% 8%, #8B5CF660, transparent 50%), #150b2e
+        }
+
+        #st:before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(#fff1 1px, transparent 1px) 0 0/48px 48px, linear-gradient(90deg, #fff1 1px, transparent 1px) 0 0/48px 48px;
+            -webkit-mask: linear-gradient(#000, transparent 85%);
+            mask: linear-gradient(#000, transparent 85%)
+        }
+
+        h1,
+        h2,
+        h3,
+        .fd {
+            font-family: Fredoka, sans-serif
+        }
+
+        h2 {
+            font-size: 36px;
+            line-height: 1.1;
+            margin-bottom: 12px
+        }
+
+        h2 span {
+            color: var(--ac)
+        }
+
+        .tag {
+            display: inline-block;
+            background: var(--ac);
+            color: #0F172A;
+            font: 700 12px Fredoka;
+            letter-spacing: 2px;
+            padding: 4px 12px;
+            border-radius: 99px;
+            margin-bottom: 8px
+        }
+
+        .g {
+            background: rgba(255, 255, 255, .07);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, .18);
+            border-radius: 22px;
+            box-shadow: inset 0 1px 0 #fff3, 0 8px 0 -3px #0004, 0 24px 46px #0007
+        }
+
+        .sl {
+            position: absolute;
+            left: 270px;
+            top: 26px;
+            right: 30px;
+            bottom: 92px;
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 40px;
-            text-align: center;
-            z-index: 1;
+            opacity: 0;
+            pointer-events: none;
+            transform: rotateY(55deg) translateX(90px) translateZ(-150px);
+            transform-origin: 0 50%;
+            transition: .65s cubic-bezier(.3, .9, .3, 1)
         }
 
-        .slide.active {
+        .sl.on {
             opacity: 1;
-            visibility: visible;
-            transform: rotateY(0deg) scale(1);
-            z-index: 10;
+            pointer-events: auto;
+            transform: none
         }
 
-        .slide.prev {
-            transform: rotateY(90deg) scale(0.8);
-            transform-origin: right center;
+        .sl.pv {
+            transform: rotateY(-55deg) translateX(-90px) translateZ(-150px)
         }
 
-        /* Background Varieties per slide */
-        #slide-1 { background: radial-gradient(circle, #ffe259, #ffa751); }
-        #slide-2 { background: radial-gradient(circle, #a1c4fd, #c2e9fb); }
-        #slide-3 { background: radial-gradient(circle, #84fab0, #8fd3f4); }
-        #slide-4 { background: radial-gradient(circle, #ffecd2, #fcb69f); }
-        #slide-5 { background: radial-gradient(circle, #cfd9df, #e2ebf0); }
-        #slide-6 { background: radial-gradient(circle, #fbc2eb, #a6c1ee); }
-        #slide-7 { background: radial-gradient(circle, #fdcbf1, #e6dee9); }
-        #slide-8 { background: radial-gradient(circle, #a18cd1, #fbc2eb); }
-        #slide-9 { background: radial-gradient(circle, #ff9a9e, #fecfef); }
-        #slide-10 { background: radial-gradient(circle, #f6d365, #fda085); }
-        #slide-11 { background: radial-gradient(circle, #84fab0, #8fd3f4); }
-        #slide-12 { background: radial-gradient(circle, #00c6ff, #0072ff); color: white;}
-
-        /* Typography */
-        h1, h2 {
-            font-family: 'Fredoka One', cursive;
-            margin-bottom: 20px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
-            line-height: 1.2;
-        }
-
-        h1 { font-size: 4rem; color: #ff3366; }
-        h2 { font-size: 3rem; color: #2c3e50; }
-        
-        p, li {
-            font-size: 1.5rem;
-            line-height: 1.6;
-            margin-bottom: 15px;
-            font-weight: 700;
-            color: #4a4a4a;
-        }
-        
-        #slide-12 h1, #slide-12 p { color: white; }
-
-        ul {
-            text-align: left;
-            margin: 20px auto;
-            max-width: 800px;
-            background: rgba(255,255,255,0.7);
-            padding: 30px 50px;
-            border-radius: 20px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
-            transform: translateZ(50px);
-        }
-
-        /* 3D Pop Up Elements */
-        .pop-up-element {
-            transform: scale(0);
-            transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            transition-delay: 0.5s;
-        }
-
-        .active .pop-up-element {
-            transform: scale(1);
-        }
-        
-        .box-3d {
-            background: white;
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: 20px 20px 60px #d9d9d9, -20px -20px 60px #ffffff;
-            border: 4px solid #fff;
-            transform-style: preserve-3d;
-            transform: translateZ(100px);
-        }
-
-        /* Navigation Buttons */
-        .nav-controls {
-            position: absolute;
-            bottom: 20px;
-            right: 30px;
-            z-index: 100;
+        .row {
             display: flex;
-            gap: 15px;
+            gap: 18px;
+            flex: 1;
+            min-height: 0
         }
 
-        button {
-            background: #ff4757;
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            font-size: 1.2rem;
-            font-family: 'Fredoka One', cursive;
-            border-radius: 50px;
+        .p {
+            padding: 22px;
+            font-size: 15px;
+            line-height: 1.55
+        }
+
+        .p p {
+            margin-top: 10px
+        }
+
+        .p h3 {
+            font-size: 24px;
+            color: var(--ac)
+        }
+
+        .hl {
+            background: #ffffff14;
+            border-left: 4px solid var(--ac);
+            padding: 10px 12px;
+            border-radius: 10px
+        }
+
+        .bt {
+            background: var(--ac);
+            color: #0F172A;
+            border: 0;
+            border-radius: 16px;
+            padding: 12px 24px;
+            font: 700 18px Fredoka;
             cursor: pointer;
-            box-shadow: 0 8px 15px rgba(255, 71, 87, 0.4);
-            transition: all 0.3s ease;
-            outline: none;
+            box-shadow: 0 6px 0 #0007, 0 14px 22px #0006;
+            transition: .15s;
+            transform: perspective(500px)
         }
 
-        button:hover {
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 12px 20px rgba(255, 71, 87, 0.6);
-            background: #ff6b81;
+        .bt:hover {
+            transform: perspective(500px) translateY(-3px) rotateX(12deg) translateZ(8px)
         }
 
-        button:active {
-            transform: translateY(2px);
-        }
-        
-        button:disabled {
-            background: #ccc;
-            box-shadow: none;
-            cursor: not-allowed;
-            transform: none;
+        .bt:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 #0007
         }
 
-        /* Progress Bar */
-        .progress-bar-container {
+        .xs {
+            padding: 8px 16px;
+            font-size: 15px
+        }
+
+        #nv {
+            position: absolute;
+            left: 330px;
+            bottom: 16px;
+            width: 620px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 14px;
+            border-radius: 24px;
+            z-index: 20
+        }
+
+        #ct {
+            text-align: center;
+            flex: 1;
+            margin: 0 14px;
+            font: 700 15px Fredoka;
+            letter-spacing: 2px
+        }
+
+        #ct i {
+            display: block;
+            height: 5px;
+            border-radius: 9px;
+            background: #fff2;
+            margin-top: 6px;
+            overflow: hidden
+        }
+
+        #pg {
+            display: block;
+            height: 100%;
+            width: 8%;
+            background: var(--ac);
+            box-shadow: 0 0 12px var(--ac), 0 0 4px #fff;
+            transition: .5s
+        }
+
+        #ms {
+            position: absolute;
+            left: 14px;
+            bottom: 64px;
+            width: 240px;
+            height: 340px;
+            z-index: 10
+        }
+
+        #bw {
+            position: absolute;
+            left: 0;
+            bottom: 300px;
+            width: 240px;
+            background: #fff;
+            color: #0F172A;
+            border-radius: 18px;
+            padding: 11px 14px;
+            font: 600 13.5px/1.4 Poppins;
+            box-shadow: 0 6px 0 #0005, 0 16px 30px #0006;
+            animation: pp .4s
+        }
+
+        #bw:after {
+            content: "";
+            position: absolute;
+            left: 96px;
+            bottom: -12px;
+            border: 12px solid transparent;
+            border-top-color: #fff;
+            border-bottom: 0
+        }
+
+        @keyframes pp {
+            from {
+                transform: scale(.7);
+                opacity: 0
+            }
+        }
+
+        #mas {
             position: absolute;
             bottom: 0;
-            left: 0;
+            left: 15px;
+            width: 210px;
+            height: 294px;
+            cursor: pointer;
+            overflow: visible
+        }
+
+        #mb {
+            animation: fl 3s ease-in-out infinite
+        }
+
+        @keyframes fl {
+            50% {
+                transform: translateY(-7px)
+            }
+        }
+
+        #ey {
+            transform-origin: 100px 89px;
+            animation: bl 4s infinite
+        }
+
+        @keyframes bl {
+
+            0%,
+            93%,
+            100% {
+                transform: none
+            }
+
+            96% {
+                transform: scaleY(.1)
+            }
+        }
+
+        #armR {
+            transform-origin: 140px 148px;
+            transition: .35s
+        }
+
+        #armL {
+            transform-origin: 60px 148px;
+            transition: .35s
+        }
+
+        #hd {
+            transform-origin: 100px 130px;
+            transition: .3s
+        }
+
+        #lgL {
+            transform-origin: 88px 205px
+        }
+
+        #lgR {
+            transform-origin: 112px 205px
+        }
+
+        #mas .mo,
+        #cap,
+        #stars,
+        #ptr {
+            display: none
+        }
+
+        #mas[data-m=hi] #armR {
+            animation: wv .5s infinite alternate
+        }
+
+        @keyframes wv {
+            from {
+                transform: rotate(-135deg)
+            }
+
+            to {
+                transform: rotate(-170deg)
+            }
+        }
+
+        #mas[data-m=hi] .sm,
+        #mas[data-m=happy] .sm,
+        #mas[data-m=laser] .sm {
+            display: block
+        }
+
+        #mas[data-m=wow] .op {
+            display: block
+        }
+
+        #mas[data-m=think] .fl {
+            display: block
+        }
+
+        #mas[data-m=point] .gr,
+        #mas[data-m=cheer] .gr,
+        #mas[data-m=grad] .gr {
+            display: block
+        }
+
+        #mas[data-m=point] #armR,
+        #mas[data-m=laser] #armR {
+            transform: rotate(-95deg)
+        }
+
+        #mas[data-m=laser] #ptr {
+            display: block
+        }
+
+        #mas[data-m=laser] #armL {
+            transform: rotate(12deg)
+        }
+
+        #mas[data-m=wow] #armR {
+            transform: rotate(-35deg)
+        }
+
+        #mas[data-m=wow] #armL {
+            transform: rotate(35deg)
+        }
+
+        #mas[data-m=think] #hd {
+            transform: rotate(-8deg)
+        }
+
+        #mas[data-m=cheer] #armR,
+        #mas[data-m=grad] #armR {
+            transform: rotate(-165deg)
+        }
+
+        #mas[data-m=cheer] #armL,
+        #mas[data-m=grad] #armL {
+            transform: rotate(165deg)
+        }
+
+        #mas[data-m=cheer] #stars,
+        #mas[data-m=grad] #stars {
+            display: block;
+            animation: tw .6s infinite alternate
+        }
+
+        #mas[data-m=grad] #cap {
+            display: block
+        }
+
+        @keyframes tw {
+            to {
+                opacity: .3;
+                transform: translateY(-6px)
+            }
+        }
+
+        #mas.run #mb {
+            animation: bn var(--sp) ease-in-out infinite
+        }
+
+        #mas.run #lgL {
+            animation: lg var(--sp) infinite alternate
+        }
+
+        #mas.run #lgR {
+            animation: lg var(--sp) infinite alternate-reverse
+        }
+
+        @keyframes bn {
+            50% {
+                transform: translateY(-16px)
+            }
+        }
+
+        @keyframes lg {
+            from {
+                transform: rotate(-35deg)
+            }
+
+            to {
+                transform: rotate(35deg)
+            }
+        }
+
+        .pt {
+            position: absolute;
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 50;
+            animation: pf .9s ease-out forwards
+        }
+
+        @keyframes pf {
+            to {
+                transform: translate(var(--dx), var(--dy)) scale(0);
+                opacity: 0
+            }
+        }
+
+        .bm {
+            stroke-dasharray: 1;
+            animation: dr 3s infinite
+        }
+
+        @keyframes dr {
+            0% {
+                stroke-dashoffset: 1;
+                opacity: 1
+            }
+
+            35%,
+            85% {
+                stroke-dashoffset: 0;
+                opacity: 1
+            }
+
+            100% {
+                stroke-dashoffset: 0;
+                opacity: 0
+            }
+        }
+
+        .sp {
+            animation-delay: .9s !important
+        }
+
+        .tt h1 {
+            font-size: 58px;
+            line-height: 1;
+            margin: 12px 0 26px;
+            color: #fff;
+            text-shadow: 0 1px 0 #0891b2, 0 2px 0 #0e7490, 0 3px 0 #155e75, 0 4px 0 #164e63, 0 10px 26px #06B6D4aa;
+            transform: perspective(700px) rotateY(8deg) rotateX(4deg);
+            transform-origin: 0 50%
+        }
+
+        .tt h1 span {
+            color: #22D3EE
+        }
+
+        .tt small {
+            font: 600 13px Poppins;
+            letter-spacing: 3px;
+            color: #22D3EE
+        }
+
+        .q {
+            flex: 1;
+            padding: 24px;
+            cursor: pointer;
+            transition: .25s;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: center;
+            justify-content: center
+        }
+
+        .q:hover {
+            transform: translateY(-10px) rotateX(8deg)
+        }
+
+        .q.on {
+            border-color: var(--ac);
+            box-shadow: 0 0 30px #06B6D455, 0 24px 46px #0007
+        }
+
+        .q i {
+            font-size: 54px;
+            font-style: normal
+        }
+
+        .q b {
+            font: 700 22px Fredoka
+        }
+
+        .q p {
+            font-size: 14px;
+            opacity: .8
+        }
+
+        .q em {
+            background: #F59E0B;
+            color: #0F172A;
+            font: 700 13px Fredoka;
+            padding: 3px 12px;
+            border-radius: 99px;
+            font-style: normal
+        }
+
+        .ck {
+            padding: 14px 18px;
+            margin-bottom: 12px;
+            display: flex;
+            gap: 14px;
+            align-items: center;
+            cursor: pointer;
+            font-size: 16px;
+            transition: .2s
+        }
+
+        .ck:hover {
+            transform: translateX(8px)
+        }
+
+        .ck u {
+            width: 34px;
+            height: 34px;
+            border-radius: 10px;
+            border: 3px solid var(--ac);
+            display: grid;
+            place-items: center;
+            text-decoration: none;
+            font-size: 20px;
+            flex: none
+        }
+
+        .ck.dn u {
+            background: var(--ac)
+        }
+
+        .ck.dn u:after {
+            content: "✓";
+            color: #0F172A
+        }
+
+        .ck.dn {
+            border-color: #22c55e
+        }
+
+        .sv {
+            width: 100%;
+            max-height: 330px
+        }
+
+        .lb {
+            fill: #fff;
+            font: 600 13px Poppins;
+            opacity: .85
+        }
+
+        .tx {
+            fill: #fff;
+            font: 700 18px Fredoka
+        }
+
+        .ctl {
+            display: flex;
+            gap: 14px;
+            align-items: center;
+            margin-top: 10px;
+            flex-wrap: wrap;
+            font-size: 14px
+        }
+
+        .ctl input {
+            accent-color: var(--ac);
+            width: 170px;
+            vertical-align: middle
+        }
+
+        .ctl select {
+            background: #0F172A;
+            color: #fff;
+            border: 1px solid var(--ac);
+            border-radius: 10px;
+            padding: 6px 10px
+        }
+
+        .rd {
+            font-size: 14px;
+            color: var(--ac)
+        }
+
+        .fc {
+            perspective: 1200px;
+            cursor: pointer
+        }
+
+        .fi {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            transition: .8s cubic-bezier(.3, 1.35, .5, 1)
+        }
+
+        .fc.fl .fi {
+            transform: rotateY(180deg)
+        }
+
+        .ff,
+        .fb {
+            position: absolute;
+            inset: 0;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 22px;
+            gap: 8px;
+            background: linear-gradient(145deg, #ffffff26, #ffffff0d), #1e1b4b;
+            border: 1px solid #fff3;
+            border-radius: 24px;
+            box-shadow: 0 8px 0 -2px #0005, 0 26px 50px #0008
+        }
+
+        .fb {
+            transform: rotateY(180deg)
+        }
+
+        .fm {
+            font: 700 54px Fredoka;
+            color: #fff;
+            margin: 6px 0
+        }
+
+        .fm span {
+            cursor: help;
+            border-bottom: 4px dotted var(--ac);
+            padding: 0 4px;
+            transition: .2s;
+            display: inline-block
+        }
+
+        .fm span:hover {
+            color: var(--ac);
+            transform: translateY(-6px) scale(1.1)
+        }
+
+        .cd {
+            flex: 1;
+            padding: 18px;
+            text-align: center;
+            cursor: pointer;
+            transition: .25s;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            align-items: center
+        }
+
+        .cd:hover,
+        .cd.sel {
+            transform: translateY(-10px);
+            border-color: var(--ac);
+            box-shadow: 0 0 28px #F59E0B55, 0 24px 40px #0007
+        }
+
+        .cd i {
+            width: 78px;
+            height: 78px;
+            border-radius: 50%;
+            box-shadow: inset -8px -8px 18px #0006, 0 10px 20px #0005
+        }
+
+        .cd h3 {
+            font-size: 24px
+        }
+
+        .cd b {
+            color: var(--ac);
+            font: 700 20px Fredoka
+        }
+
+        .cd small {
+            opacity: .75
+        }
+
+        .cd u {
             width: 100%;
             height: 8px;
-            background: rgba(255,255,255,0.3);
-            z-index: 100;
+            background: #fff2;
+            border-radius: 9px;
+            overflow: hidden;
+            margin-top: auto
         }
 
-        .progress-bar {
+        .cd s {
+            display: block;
             height: 100%;
-            background: #2ed573;
-            width: 0%;
-            transition: width 0.5s ease;
+            background: var(--ac);
+            transition: .5s
         }
 
-        /* Graphics/Icons (CSS drawn for simplicity/no external assets) */
-        .icon-light {
-            font-size: 5rem;
-            margin: 20px;
-            display: inline-block;
-            animation: float 3s ease-in-out infinite;
+        .tb {
+            background: #ffffff14;
+            color: #fff;
+            border: 1px solid #fff3;
+            border-radius: 14px;
+            padding: 8px 18px;
+            font: 600 16px Fredoka;
+            cursor: pointer;
+            margin-right: 8px;
+            transition: .2s
         }
 
-        @keyframes float {
-            0% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(5deg); }
-            100% { transform: translateY(0px) rotate(0deg); }
+        .tb.on {
+            background: var(--ac);
+            color: #0F172A
         }
 
-        .decorative-shape {
+        .mr {
+            animation: mr 1.6s ease-in-out infinite alternate;
+            transform-origin: 320px 182px
+        }
+
+        @keyframes mr {
+            to {
+                transform: scaleX(1.15) skewX(8deg);
+                opacity: .4
+            }
+        }
+
+        #md {
             position: absolute;
-            opacity: 0.2;
-            z-index: -1;
+            inset: -10px;
+            z-index: 30;
+            background: #020617cc;
+            backdrop-filter: blur(6px);
+            display: grid;
+            place-items: center;
+            border-radius: 24px;
+            transition: .4s
         }
-        .circle-1 { width: 200px; height: 200px; border-radius: 50%; background: white; top: -50px; left: -50px; }
-        .circle-2 { width: 300px; height: 300px; border-radius: 50%; background: white; bottom: -100px; right: -50px; }
+
+        #md.hid {
+            opacity: 0;
+            pointer-events: none
+        }
+
+        #md .g {
+            padding: 26px 40px;
+            text-align: center;
+            animation: pp .5s;
+            background: #1e1b4bf0
+        }
+
+        #md h2 {
+            color: #F59E0B
+        }
+
+        .rc li {
+            margin: 0 0 10px 22px;
+            font-size: 15px;
+            line-height: 1.45
+        }
+
+        .rc li::marker {
+            color: var(--ac)
+        }
     </style>
 </head>
+
 <body>
+    <div id="st">
 
-    <div class="presentation-container" id="presentation">
-        
-        <div class="progress-bar-container">
-            <div class="progress-bar" id="progress"></div>
-        </div>
+        <section class="sl on" id="s0">
+            <div class="row" style="align-items:center">
+                <div class="tt" style="width:520px"><small>LAB AGEN SAINS · IPA SMP</small>
+                    <h1>PETUALANGAN<br><span>PEMBIASAN</span><br>CAHAYA</h1><button class="bt" onclick="go(1)">Mulai
+                        Misi Belajar ▶</button>
+                </div>
+                <svg viewBox="0 0 460 400" style="flex:1;min-width:0;filter:drop-shadow(0 30px 30px #0008)">
+                    <defs>
+                        <linearGradient id="pg1" x1="0" y1="0" x2="1" y2="1">
+                            <stop offset="0" stop-color="#fff" stop-opacity=".7" />
+                            <stop offset="1" stop-color="#06B6D4" stop-opacity=".25" />
+                        </linearGradient>
+                    </defs>
+                    <polygon points="230,90 340,290 120,290" fill="url(#pg1)" stroke="#fff" stroke-width="3"
+                        stroke-linejoin="round" />
+                    <polygon points="230,90 340,290 230,290" fill="#fff" opacity=".12" />
+                    <line class="bm" pathLength="1" x1="0" y1="262" x2="164" y2="210" stroke="#FF6B6B" stroke-width="6"
+                        stroke-linecap="round" style="filter:drop-shadow(0 0 8px #FF6B6B)" />
+                    <line class="bm sp" pathLength="1" x1="164" y1="210" x2="312" y2="240" stroke="#fff"
+                        stroke-width="4" stroke-linecap="round" />
+                    <g class="bm sp" style="stroke-linecap:round;stroke-width:5;filter:drop-shadow(0 0 4px #fff)">
+                        <line x1="312" y1="240" x2="455" y2="262" stroke="#ef4444" />
+                        <line x1="312" y1="240" x2="455" y2="278" stroke="#f97316" />
+                        <line x1="312" y1="240" x2="455" y2="294" stroke="#facc15" />
+                        <line x1="312" y1="240" x2="455" y2="310" stroke="#22c55e" />
+                        <line x1="312" y1="240" x2="455" y2="326" stroke="#38bdf8" />
+                        <line x1="312" y1="240" x2="455" y2="342" stroke="#6366f1" />
+                        <line x1="312" y1="240" x2="455" y2="358" stroke="#a855f7" />
+                    </g>
+                </svg>
+            </div>
+        </section>
 
-        <div class="nav-controls">
-            <button id="prevBtn" onclick="prevSlide()" disabled>Kembali</button>
-            <button id="nextBtn" onclick="nextSlide()">Lanjut ✨</button>
-        </div>
-
-        <!-- Slide 1: Cover -->
-        <div class="slide active" id="slide-1">
-            <div class="decorative-shape circle-1"></div>
-            <div class="decorative-shape circle-2"></div>
-            <div class="pop-up-element">
-                <div class="icon-light">🔦🌈</div>
-                <h1>Pembiasan Cahaya</h1>
-                <p>Jelajahi Rahasia Cahaya yang Menakjubkan!</p>
-                <div class="box-3d" style="margin-top:20px; padding: 15px; font-size: 1.2rem; color: #e15f41;">
-                    Materi IPA SMP Seru & Interaktif 🚀
+        <section class="sl" id="s1"><span class="tag">MISI 01</span>
+            <h2>Capaian <span>Pembelajaran</span></h2>
+            <div class="row" style="align-items:center;perspective:1000px">
+                <div class="g q" onclick="qc(0)"><i>🧠</i><b>Pahami Konsep</b>
+                    <p>Menjelaskan pembiasan cahaya</p><em>+100 XP</em>
+                </div>
+                <div class="g q" onclick="qc(1)"><i>🔬</i><b>Analisis Hukum</b>
+                    <p>Menghitung dengan Hukum Snellius</p><em>+150 XP</em>
+                </div>
+                <div class="g q" onclick="qc(2)"><i>🌈</i><b>Terapkan di Dunia Nyata</b>
+                    <p>Mengaitkan dengan fenomena alam</p><em>+200 XP</em>
                 </div>
             </div>
-        </div>
+        </section>
 
-        <!-- Slide 2: Capaian -->
-        <div class="slide" id="slide-2">
-            <div class="pop-up-element box-3d">
-                <h2>🎯 Capaian Pembelajaran</h2>
-                <p>Kamu akan mampu memahami fenomena pembiasan cahaya, mengenali sifat-sifatnya, dan melihat bagaimana ini bekerja dalam kehidupan sehari-hari kita dengan seru!</p>
-            </div>
-        </div>
-
-        <!-- Slide 3: Tujuan -->
-        <div class="slide" id="slide-3">
-            <div class="pop-up-element">
-                <h2>🚀 Tujuan Pembelajaran</h2>
-                <ul>
-                    <li>✨ Menjelaskan apa itu pembiasan cahaya</li>
-                    <li>✨ Menyebutkan sifat-sifat pembiasan</li>
-                    <li>✨ Memahami Hukum Snellius dan Indeks Bias</li>
-                    <li>✨ Menemukan contohnya di sekitarmu!</li>
-                </ul>
-            </div>
-        </div>
-
-        <!-- Slide 4: Pengertian -->
-        <div class="slide" id="slide-4">
-            <div class="pop-up-element">
-                <h2>Apa itu Pembiasan Cahaya? 🤔</h2>
-                <div class="box-3d">
-                    <p style="color:#2f3542;">Pembiasan cahaya adalah <b>pembelokan arah rambat cahaya</b> ketika cahaya melewati dua medium (zat) yang berbeda kerapatannya.</p>
-                    <div class="icon-light" style="font-size:3rem;">🌬️ ➔ 💧</div>
-                    <p style="font-size:1.2rem;">Contoh: Dari udara masuk ke dalam air!</p>
+        <section class="sl" id="s2"><span class="tag">MISI 02</span>
+            <h2>Tujuan <span>Pembelajaran</span></h2>
+            <div class="row">
+                <div style="flex:1">
+                    <div class="g ck" data-k="0"><u></u>Menjelaskan pengertian pembiasan cahaya</div>
+                    <div class="g ck" data-k="1"><u></u>Membedakan pembiasan mendekati &amp; menjauhi garis normal</div>
+                    <div class="g ck" data-k="2"><u></u>Menggunakan Hukum Snellius: n₁ sin i = n₂ sin r</div>
+                    <div class="g ck" data-k="3"><u></u>Menyebutkan contoh pembiasan sehari-hari</div>
+                </div>
+                <div class="g p"
+                    style="width:230px;text-align:center;display:flex;flex-direction:column;justify-content:center">
+                    <div style="font-size:60px">🏅</div>
+                    <h3>Target Agen</h3>
+                    <div id="cnt" class="fd" style="font-size:60px">0/4</div>
                 </div>
             </div>
-        </div>
+        </section>
 
-        <!-- Slide 5: Sifat 1 -->
-        <div class="slide" id="slide-5">
-            <div class="pop-up-element box-3d">
-                <h2>Sifat Pembiasan #1 🔍</h2>
-                <h3 style="color:#e15f41; font-size: 2rem; margin: 15px 0;">Mendekati Garis Normal</h3>
-                <p>Jika cahaya merambat dari medium <b>kurang rapat</b> (udara) ke medium <b>lebih rapat</b> (air/kaca), maka cahaya akan dibiaskan <b>mendekati</b> garis normal.</p>
-                <div style="font-size:3rem;">⬇️ ↘️</div>
-            </div>
-        </div>
-
-        <!-- Slide 6: Sifat 2 -->
-        <div class="slide" id="slide-6">
-            <div class="pop-up-element box-3d">
-                <h2>Sifat Pembiasan #2 🔍</h2>
-                <h3 style="color:#3742fa; font-size: 2rem; margin: 15px 0;">Menjauhi Garis Normal</h3>
-                <p>Jika cahaya merambat dari medium <b>lebih rapat</b> (kaca) ke medium <b>kurang rapat</b> (udara), maka cahaya akan dibiaskan <b>menjauhi</b> garis normal.</p>
-                <div style="font-size:3rem;">↗️ ➡️</div>
-            </div>
-        </div>
-
-        <!-- Slide 7: Hukum Snellius -->
-        <div class="slide" id="slide-7">
-            <div class="pop-up-element">
-                <h2>📜 Hukum Snellius</h2>
-                <ul>
-                    <li>1️⃣ Sinar datang, sinar bias, dan garis normal terletak pada satu bidang datar.</li>
-                    <li>2️⃣ Perbandingan sinus sudut datang (i) dengan sinus sudut bias (r) merupakan suatu bilangan tetap (Indeks Bias).</li>
-                </ul>
-            </div>
-        </div>
-
-        <!-- Slide 8: Indeks Bias (Penjelasan) -->
-        <div class="slide" id="slide-8">
-            <div class="pop-up-element box-3d">
-                <h2>📏 Indeks Bias (n)</h2>
-                <p>Adalah nilai yang menunjukkan seberapa besar suatu medium membelokkan cahaya.</p>
-                <div style="background:#ffebd2; padding:15px; border-radius:15px; margin: 20px 0;">
-                    <p style="margin:0; color:#d35400;"><b>Semakin rapat mediumnya, semakin besar indeks biasnya!</b></p>
+        <section class="sl" id="s3"><span class="tag">MATERI 01</span>
+            <h2>Apa itu <span>Pembiasan Cahaya?</span></h2>
+            <div class="row">
+                <div class="g p" style="width:360px">
+                    <h3>Narasi Profesor</h3>
+                    <p>Pembiasan cahaya adalah <b>pembelokan arah rambat cahaya</b> saat melewati bidang batas dua
+                        medium yang kerapatan optiknya berbeda.</p>
+                    <p>Penyebabnya: <b>kelajuan cahaya berubah</b> di tiap medium.</p>
+                    <p class="hl">💡 Pensil tampak patah karena cahaya dari bagian yang terendam dibiaskan dulu sebelum
+                        sampai ke matamu.</p>
                 </div>
-                <p style="font-size:1.2rem;">Indeks Bias Udara = 1<br>Indeks Bias Air = 1.33</p>
-            </div>
-        </div>
-
-        <!-- Slide 9: Contoh 1 -->
-        <div class="slide" id="slide-9">
-            <div class="pop-up-element">
-                <h2>Kehidupan Sehari-hari 🥤</h2>
-                <div class="box-3d">
-                    <h3 style="color:#16a085; font-size:2rem; margin-bottom:10px;">Sedotan Tampak Patah</h3>
-                    <p>Pernah lihat sedotan di dalam gelas berisi air? Sedotan terlihat bengkok atau patah di batas air karena cahaya dari bagian sedotan di dalam air dibelokkan saat menuju mata kita!</p>
-                    <div style="font-size: 4rem;">🥛</div>
+                <div class="g" style="flex:1;padding:14px"><svg class="sv" viewBox="0 0 400 360">
+                        <defs>
+                            <linearGradient id="gl" x1="0" x2="1">
+                                <stop offset="0" stop-color="#fff" stop-opacity=".35" />
+                                <stop offset="1" stop-color="#fff" stop-opacity=".05" />
+                            </linearGradient>
+                        </defs>
+                        <rect x="110" y="120" width="180" height="220" rx="20" fill="url(#gl)" />
+                        <rect x="112" y="190" width="176" height="148" rx="18" fill="#06B6D4" opacity=".4" />
+                        <line x1="112" y1="190" x2="288" y2="190" stroke="#fff" opacity=".7" />
+                        <path id="pb" fill="none" stroke="#fff" stroke-width="3" stroke-dasharray="5 6" opacity=".7" />
+                        <path id="pa" fill="none" stroke="#FBBF24" stroke-width="14" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                        <circle id="pe" r="8" fill="#FF6B6B" />
+                        <circle id="pc" r="6" fill="#92400E" />
+                        <rect x="112" y="190" width="176" height="148" rx="18" fill="#06B6D4" opacity=".2" />
+                        <rect x="110" y="120" width="180" height="220" rx="20" fill="none" stroke="#fff"
+                            stroke-width="3" opacity=".6" /><text x="296" y="184" class="lb">permukaan air</text>
+                    </svg>
+                    <div class="ctl"><label>Kemiringan pensil <input id="pr" type="range" min="0" max="55"
+                                value="30"></label><span class="rd" id="pt"></span></div>
                 </div>
             </div>
-        </div>
+        </section>
 
-        <!-- Slide 10: Contoh 2 -->
-        <div class="slide" id="slide-10">
-            <div class="pop-up-element">
-                <h2>Kehidupan Sehari-hari 🏊‍♂️</h2>
-                <div class="box-3d">
-                    <h3 style="color:#2980b9; font-size:2rem; margin-bottom:10px;">Kolam Tampak Dangkal</h3>
-                    <p>Kolam renang atau sungai yang jernih selalu terlihat lebih dangkal dari aslinya. Ini adalah trik ilusi dari pembiasan cahaya!</p>
-                    <div style="font-size: 4rem;">🩱</div>
+        <section class="sl" id="s4"><span class="tag">SIFAT 1</span>
+            <h2>Mendekati <span>Garis Normal</span></h2>
+            <div class="row">
+                <div class="g" id="sim5" style="flex:1;padding:14px"></div>
+                <div class="g p" style="width:250px">
+                    <h3>Renggang → Rapat</h3>
+                    <p>Udara (renggang) ke air (rapat): cahaya <b>melambat</b> dan membelok <b>mendekati garis
+                            normal</b>.</p>
+                    <p class="hl">r &lt; i</p>
+                    <p>Garis normal = garis imajiner tegak lurus bidang batas.</p>
                 </div>
             </div>
-        </div>
-        
-        <!-- Slide 11: Contoh 3 / Pelangi -->
-        <div class="slide" id="slide-11">
-            <div class="pop-up-element">
-                <h2>Kehidupan Sehari-hari 🌈</h2>
-                <div class="box-3d">
-                    <h3 style="color:#8e44ad; font-size:2rem; margin-bottom:10px;">Terbentuknya Pelangi</h3>
-                    <p>Cahaya matahari yang putih dibiaskan dan diuraikan oleh rintik air hujan di udara, membentuk warna-warni pelangi yang indah!</p>
-                    <div style="font-size: 4rem;">🌦️🌈</div>
+        </section>
+
+        <section class="sl" id="s5"><span class="tag">SIFAT 2</span>
+            <h2>Menjauhi <span>Garis Normal</span></h2>
+            <div class="row">
+                <div class="g" id="sim6" style="flex:1;padding:14px"></div>
+                <div class="g p" style="width:250px">
+                    <h3>Rapat → Renggang</h3>
+                    <p>Air (rapat) ke udara (renggang): cahaya <b>dipercepat</b> dan membelok <b>menjauhi garis
+                            normal</b>.</p>
+                    <p class="hl">i &lt; r</p>
+                    <p>Kalau i terlalu besar (&gt; 48,8° untuk air), cahaya dipantulkan total. Ini dipakai di serat
+                        optik!</p>
                 </div>
             </div>
-        </div>
+        </section>
 
-        <!-- Slide 12: Penutup -->
-        <div class="slide" id="slide-12">
-            <div class="pop-up-element">
-                <div class="icon-light" style="font-size:5rem;">🎓🎉</div>
-                <h1>Luar Biasa!</h1>
-                <p>Kamu telah menyelesaikan materi Pembiasan Cahaya.</p>
-                <div class="box-3d" style="color:#333; margin-top:30px;">
-                    <p>Sampai jumpa di petualangan sains selanjutnya!</p>
+        <section class="sl" id="s6"><span class="tag">RUMUS</span>
+            <h2>Hukum <span>Snellius</span></h2>
+            <div class="row" style="justify-content:center">
+                <div class="fc" data-s="Ini dia rumusnya! Sentuh tiap bagian rumus, nanti kujelasin satu-satu."
+                    style="width:720px;height:380px">
+                    <div class="fi">
+                        <div class="ff">
+                            <div style="font-size:70px">⚡</div>
+                            <h2 style="margin:0">Hukum Snellius</h2>
+                            <p>Ketuk kartu untuk membuka rumus rahasianya</p>
+                        </div>
+                        <div class="fb">
+                            <div class="fm" id="fm"><span data-k="a">n₁</span> sin <span data-k="b">i</span> = <span
+                                    data-k="c">n₂</span> sin <span data-k="d">r</span></div>
+                            <p>Sentuh / arahkan kursor ke tiap bagian rumus 👆</p><small style="opacity:.6">(ketuk area
+                                kosong untuk membalik kartu)</small>
+                        </div>
+                    </div>
                 </div>
             </div>
+        </section>
+
+        <section class="sl" id="s7"><span class="tag">MATERI 02</span>
+            <h2>Indeks Bias <span>Medium</span></h2>
+            <div class="row" id="gd" style="flex:none;height:300px;perspective:1000px"></div>
+            <div class="g p" style="margin-top:16px"><b id="sp">Pilih satu medium, lalu lihat Profesor berlari!</b>
+                <p>Indeks bias n = c / v. Makin besar n, makin lambat cahaya di medium itu dan makin kuat pembelokannya.
+                </p>
+            </div>
+        </section>
+
+        <section class="sl" id="s8"><span class="tag">FENOMENA 1</span>
+            <h2>Dangkal &amp; <span>Pensil Bengkok</span></h2>
+            <div class="row" style="padding:6px 0">
+                <div class="fc"
+                    data-s="Nah, ketahuan! Matamu ketipu karena cahaya dibiaskan. Dasar kolam aslinya lebih dalam!"
+                    style="flex:1">
+                    <div class="fi">
+                        <div class="ff">
+                            <div style="font-size:80px">🏊</div>
+                            <h2>Kolam Terlihat Dangkal</h2>
+                            <p>Klik untuk melihat penjelasan ilmiahnya</p>
+                        </div>
+                        <div class="fb"><svg viewBox="0 0 400 230" style="width:100%">
+                                <rect y="100" width="400" height="130" fill="#06B6D4" opacity=".4" />
+                                <line x1="0" y1="100" x2="400" y2="100" stroke="#fff" />
+                                <line x1="300" y1="215" x2="230" y2="100" stroke="#F59E0B" stroke-width="3" />
+                                <line x1="230" y1="100" x2="110" y2="10" stroke="#F59E0B" stroke-width="3" />
+                                <line x1="230" y1="100" x2="300" y2="156" stroke="#fff" stroke-dasharray="5 5" />
+                                <circle cx="300" cy="215" r="9" fill="#FBBF24" />
+                                <circle cx="300" cy="156" r="9" fill="none" stroke="#fff" stroke-dasharray="3 3" /><text
+                                    x="318" y="160" class="lb">kedalaman semu</text><text x="318" y="219"
+                                    class="lb">asli</text><text x="60" y="30" font-size="28">👁️</text>
+                            </svg>
+                            <p style="font-size:13px">Cahaya dari dasar kolam dibiaskan menjauhi normal di permukaan.
+                                Mata mengira cahaya datang lurus, sehingga dasar tampak <b>lebih dangkal</b>.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="fc"
+                    data-s="Pensilnya nggak beneran patah, kok. Ini efek pembiasan di bidang batas air dan udara."
+                    style="flex:1">
+                    <div class="fi">
+                        <div class="ff">
+                            <div style="font-size:80px">✏️</div>
+                            <h2>Pensil Tampak Patah</h2>
+                            <p>Klik untuk melihat penjelasan ilmiahnya</p>
+                        </div>
+                        <div class="fb"><svg viewBox="0 0 400 230" style="width:100%">
+                                <rect x="120" y="30" width="160" height="190" rx="16" fill="#fff" opacity=".1"
+                                    stroke="#fff" />
+                                <rect x="122" y="110" width="156" height="108" rx="14" fill="#06B6D4" opacity=".4" />
+                                <path d="M290 10L200 110L160 190" fill="none" stroke="#FBBF24" stroke-width="12"
+                                    stroke-linecap="round" stroke-linejoin="round" opacity=".5" />
+                                <path d="M290 10L200 110L132 160" fill="none" stroke="#FBBF24" stroke-width="12"
+                                    stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                            <p style="font-size:13px">Bagian pensil dalam air tampak bergeser karena cahayanya dibiaskan
+                                ke mata. Pensil seolah <b>patah</b> di permukaan air.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="sl" id="s9"><span class="tag">FENOMENA 2</span>
+            <h2>Pelangi &amp; <span>Fatamorgana</span></h2>
+            <div><button class="tb on" data-k="0">🌈 Pelangi</button><button class="tb" data-k="1">🏜️
+                    Fatamorgana</button></div>
+            <div class="g" style="margin-top:12px;padding:10px;cursor:crosshair" id="scn"><svg class="sv" id="sc0"
+                    viewBox="0 0 640 300"></svg><svg class="sv" id="sc1" viewBox="0 0 640 300"
+                    style="display:none"></svg></div>
+            <div class="g p" id="cap" style="margin-top:12px;padding:12px 18px"></div>
+        </section>
+
+        <section class="sl" id="s10"><span class="tag">MINI LAB</span>
+            <h2>Laboratorium <span>Interaktif</span></h2>
+            <div class="row">
+                <div class="g" id="sim11" style="flex:1;padding:14px"></div>
+                <div class="g p" style="width:250px">
+                    <h3>Catatan Lab</h3>
+                    <p>Sinar datang dari <b>udara (n₁ = 1)</b> menuju medium pilihanmu.</p>
+                    <p>Program menghitung: <br><b>r = sin⁻¹( n₁ sin i / n₂ )</b></p>
+                    <p class="hl">Coba i = 0° lalu 80°. Bandingkan antar medium!</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="sl" id="s11"><span class="tag">REKAP</span>
+            <h2>Penutup &amp; <span>Rekapitulasi</span></h2>
+            <div class="row">
+                <div class="g p rc" style="flex:1">
+                    <h3>Poin Utama</h3>
+                    <ul style="margin-top:8px">
+                        <li>Pembiasan = pembelokan cahaya karena kelajuannya berubah di medium berbeda.</li>
+                        <li>Renggang → rapat: mendekati normal (r &lt; i).</li>
+                        <li>Rapat → renggang: menjauhi normal (r &gt; i).</li>
+                        <li>Hukum Snellius: n₁ sin i = n₂ sin r.</li>
+                        <li>Contoh: dasar kolam tampak dangkal, pensil patah, pelangi, fatamorgana.</li>
+                    </ul>
+                    <div style="margin-top:12px;display:flex;gap:10px"><button class="bt xs" onclick="op()">🏆 Lihat
+                            Badge</button><button class="bt xs" onclick="rs()">↺ Ulangi Misi</button></div>
+                </div>
+            </div>
+            <div id="md" class="hid">
+                <div class="g"><svg viewBox="0 0 120 130" width="150">
+                        <path d="M60 6L112 24V66C112 96 88 116 60 126C32 116 8 96 8 66V24Z" fill="#8B5CF6"
+                            stroke="#F59E0B" stroke-width="5" />
+                        <path d="M60 30l8 18 20 2-15 13 5 19-18-10-18 10 5-19-15-13 20-2z" fill="#F59E0B" />
+                    </svg>
+                    <h2>Master Pembiasan Cahaya</h2>
+                    <p style="opacity:.8">Selamat, Agen Sains! Misimu tuntas 🎉</p>
+                    <div style="margin-top:14px;display:flex;gap:10px;justify-content:center"><button class="bt xs"
+                            onclick="$('#md').classList.add('hid')">Lihat Rekap</button><button class="bt xs"
+                            onclick="rs()">↺ Ulangi Misi</button></div>
+                </div>
+            </div>
+        </section>
+
+        <div id="ms">
+            <div id="bw"><span id="bt"></span></div>
+            <svg id="mas" viewBox="0 0 200 280" data-m="hi">
+                <ellipse cx="100" cy="274" rx="55" ry="6" fill="#0008" />
+                <g id="mb">
+                    <g id="lgL">
+                        <rect x="80" y="205" width="17" height="52" rx="8" fill="#1e293b" />
+                        <path d="M72 256h31v8a6 6 0 0 1-6 6H78a6 6 0 0 1-6-6z" fill="#06B6D4" />
+                        <rect x="72" y="266" width="31" height="5" rx="2" fill="#fff" />
+                    </g>
+                    <g id="lgR">
+                        <rect x="103" y="205" width="17" height="52" rx="8" fill="#1e293b" />
+                        <path d="M97 256h31v8a6 6 0 0 1-6 6h-19a6 6 0 0 1-6-6z" fill="#06B6D4" />
+                        <rect x="97" y="266" width="31" height="5" rx="2" fill="#fff" />
+                    </g>
+                    <rect x="60" y="130" width="80" height="90" rx="28" fill="#8B5CF6" />
+                    <path d="M66 138Q100 164 134 138L128 126Q100 144 72 126z" fill="#6D28D9" />
+                    <path d="M100 152V220" stroke="#C4B5FD" stroke-width="3" />
+                    <path d="M114 170l-14 20h9l-5 18 17-25h-10z" fill="#F59E0B" />
+                    <g id="armL">
+                        <rect x="52" y="140" width="16" height="58" rx="8" fill="#7C3AED" />
+                        <circle cx="60" cy="202" r="9" fill="#F4C7A1" />
+                    </g>
+                    <g id="armR">
+                        <rect x="132" y="140" width="16" height="58" rx="8" fill="#7C3AED" />
+                        <g id="ptr">
+                            <rect x="136" y="204" width="9" height="42" rx="3" fill="#334155" />
+                            <circle cx="140.5" cy="248" r="5" fill="#FF6B6B"
+                                style="filter:drop-shadow(0 0 6px #FF6B6B)" />
+                        </g>
+                        <circle cx="140" cy="202" r="9" fill="#F4C7A1" />
+                    </g>
+                    <g id="hd">
+                        <circle cx="56" cy="90" r="6" fill="#E8B48C" />
+                        <circle cx="144" cy="90" r="6" fill="#E8B48C" />
+                        <circle cx="100" cy="86" r="44" fill="#F4C7A1" />
+                        <path
+                            d="M56 82C52 42 90 28 112 36C134 32 150 54 144 82C138 66 128 58 116 58C100 62 78 60 64 70z"
+                            fill="#0F172A" />
+                        <path d="M70 48L60 28L88 40zM124 42L142 26L144 54z" fill="#0F172A" />
+                        <path d="M96 38L104 12L118 38z" fill="#06B6D4" />
+                        <path d="M52 86C46 30 154 30 148 86" fill="none" stroke="#06B6D4" stroke-width="7"
+                            stroke-linecap="round" />
+                        <rect x="44" y="76" width="16" height="32" rx="8" fill="#0F172A" stroke="#06B6D4"
+                            stroke-width="3" />
+                        <rect x="140" y="76" width="16" height="32" rx="8" fill="#0F172A" stroke="#06B6D4"
+                            stroke-width="3" />
+                        <g id="ey">
+                            <ellipse cx="79" cy="89" rx="4.5" ry="6.5" fill="#0F172A" />
+                            <ellipse cx="121" cy="89" rx="4.5" ry="6.5" fill="#0F172A" />
+                            <circle cx="80.5" cy="86" r="1.6" fill="#fff" />
+                            <circle cx="122.5" cy="86" r="1.6" fill="#fff" />
+                        </g>
+                        <rect x="64" y="78" width="30" height="22" rx="9" fill="#06B6D433" stroke="#22D3EE"
+                            stroke-width="3" />
+                        <rect x="106" y="78" width="30" height="22" rx="9" fill="#06B6D433" stroke="#22D3EE"
+                            stroke-width="3" />
+                        <path d="M94 88H106" stroke="#22D3EE" stroke-width="3" />
+                        <circle cx="72" cy="110" r="6" fill="#FF6B6B" opacity=".4" />
+                        <circle cx="128" cy="110" r="6" fill="#FF6B6B" opacity=".4" />
+                        <path class="mo sm" d="M90 114Q100 124 110 114" fill="none" stroke="#7f1d1d" stroke-width="3"
+                            stroke-linecap="round" />
+                        <ellipse class="mo op" cx="100" cy="117" rx="6" ry="8" fill="#7f1d1d" />
+                        <path class="mo fl" d="M92 117H108" stroke="#7f1d1d" stroke-width="3" stroke-linecap="round" />
+                        <path class="mo gr" d="M88 112Q100 130 112 112z" fill="#fff" stroke="#7f1d1d" stroke-width="3"
+                            stroke-linejoin="round" />
+                        <g id="cap">
+                            <path d="M52 52L100 30L148 52L100 74z" fill="#111827" stroke="#F59E0B" stroke-width="2" />
+                            <path d="M78 64v14q22 10 44 0V64" fill="#111827" />
+                            <path d="M146 52v28" stroke="#F59E0B" stroke-width="3" />
+                            <circle cx="146" cy="82" r="4" fill="#F59E0B" />
+                        </g>
+                    </g>
+                </g>
+                <g id="stars" fill="#F59E0B"><text x="14" y="60" font-size="24">✦</text><text x="164" y="44"
+                        font-size="24">✦</text><text x="4" y="140" font-size="18">★</text><text x="176" y="130"
+                        font-size="18">★</text></g>
+            </svg>
         </div>
 
+        <nav id="nv" class="g"><button class="bt xs" onclick="go(cur-1)">◀ Sebelumnya</button>
+            <div id="ct"><span id="nm">SLIDE 01 / 12</span><i><u id="pg"></u></i></div><button class="bt xs"
+                onclick="go(cur+1)">Selanjutnya ▶</button>
+        </nav>
     </div>
-
     <script>
-        let currentSlide = 1;
-        const totalSlides = 12;
-
-        function updateSlides() {
-            for (let i = 1; i <= totalSlides; i++) {
-                const slide = document.getElementById(`slide-${i}`);
-                if (i === currentSlide) {
-                    slide.className = 'slide active';
-                } else if (i < currentSlide) {
-                    slide.className = 'slide prev';
-                } else {
-                    slide.className = 'slide';
-                }
-            }
-
-            // Update Progress Bar
-            const progress = ((currentSlide - 1) / (totalSlides - 1)) * 100;
-            document.getElementById('progress').style.width = `${progress}%`;
-
-            // Update Buttons
-            document.getElementById('prevBtn').disabled = currentSlide === 1;
-            
-            const nextBtn = document.getElementById('nextBtn');
-            if (currentSlide === totalSlides) {
-                nextBtn.innerText = "Selesai 🏁";
-                nextBtn.disabled = true;
-            } else {
-                nextBtn.innerText = "Lanjut ✨";
-                nextBtn.disabled = false;
-            }
+        const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+        let cur = 0, S = 1, ty, rt; const st = $('#st'), mas = $('#mas'), bb = $('#bt');
+        function fit() { S = Math.min(innerWidth / 1280, innerHeight / 720); st.style.transform = `translate(${-640 * S}px,${-360 * S}px) scale(${S})` } addEventListener('resize', fit); fit();
+        function say(t, m) { if (m) mas.dataset.m = m; clearInterval(ty); const w = $('#bw'); w.style.animation = 'none'; void w.offsetWidth; w.style.animation = ''; let i = 0; bb.textContent = ''; ty = setInterval(() => { bb.textContent = t.slice(0, ++i); if (i >= t.length) clearInterval(ty) }, 14) }
+        const pos = e => { const r = st.getBoundingClientRect(); return [(e.clientX - r.left) / S, (e.clientY - r.top) / S] };
+        function bu(x, y, c = ['#F59E0B', '#06B6D4', '#FF6B6B', '#8B5CF6'], n = 16) { for (let i = 0; i < n; i++) { const p = document.createElement('b'); p.className = 'pt'; const a = Math.random() * 6.28, d = 40 + Math.random() * 90; p.style.cssText = `left:${x}px;top:${y}px;background:${c[i % c.length]};box-shadow:0 0 8px ${c[i % c.length]};--dx:${Math.cos(a) * d}px;--dy:${Math.sin(a) * d}px`; st.append(p); setTimeout(() => p.remove(), 900) } }
+        const M = [['hi', 'Halo Agen Sains! Siap Berpetualang?'], ['point', 'Ini 3 misi utamamu. Klik tiap kartu, nanti aku jelasin!'], ['happy', 'Centang target yang sudah kamu kuasai. Jujur ya, jangan nyontek 😎'], ['think', 'Geser slider-nya! Pensilnya kelihatan patah di air, padahal aslinya lurus.'], ['laser', 'Tekan "Nyalakan Laser" dan perhatikan: sinar masuk air jadi mepet ke garis normal.'], ['point', 'Sekarang kebalikannya: dari air ke udara. Sinarnya malah menjauhi garis normal.'], ['think', 'Rumus sakti nih. Ketuk kartunya, lalu sentuh tiap bagian rumus.'], ['wow', 'Pilih satu medium dan lihat aku lari! Makin besar n, makin lambat cahayanya.'], ['happy', 'Klik kartunya buat nge-flip. Ternyata sains ada di kolam renang!'], ['wow', 'Klik pemandangannya, nanti ada spektrum warna meledak!'], ['point', 'Selamat datang di Mini Lab! Aku asisten lab-mu. Geser sudut, ganti medium.'], ['grad', 'Selamat! Kamu resmi jadi Master Pembiasan Cahaya!']];
+        function go(n) { if (n < 0 || n > 11) return; cur = n; $$('.sl').forEach((s, i) => s.className = 'sl' + (i == n ? ' on' : i < n ? ' pv' : '')); st.dataset.t = n > 2 && n < 11 ? 'b' : 'a'; $('#nm').textContent = `SLIDE ${String(n + 1).padStart(2, '0')} / 12`; $('#pg').style.width = (n + 1) / 12 * 100 + '%'; mas.classList.remove('run'); say(M[n][1], M[n][0]); if (n == 11) setTimeout(() => { if (cur == 11) op() }, 900) }
+        addEventListener('keydown', e => { if (e.key == 'ArrowRight') go(cur + 1); if (e.key == 'ArrowLeft') go(cur - 1) });
+        const tips = ['Tahu nggak? Cahaya di udara ngebut sekitar 300.000 km/s!', 'Pembiasan terjadi karena kelajuan cahaya berubah, bukan karena cahayanya "bingung".', 'Garis normal itu selalu tegak lurus bidang batas, jadi ukur sudut dari situ ya.'];
+        mas.onclick = () => say(tips[Math.random() * 3 | 0], 'wow');
+        // Slide 2
+        const CP = ['Misi 1: kamu bisa menjelaskan apa itu pembiasan dan kenapa cahaya membelok saat pindah medium.', 'Misi 2: kamu mampu menganalisis sifat pembiasan dan menghitung dengan Hukum Snellius.', 'Misi 3: kamu bisa mengaitkan pembiasan dengan fenomena sehari-hari seperti pelangi dan fatamorgana.'];
+        $$('.q').forEach((q, k) => q.onclick = e => { $$('.q').forEach(x => x.classList.remove('on')); q.classList.add('on'); say(CP[k], ['wow', 'think', 'cheer'][k]); bu(...pos(e), undefined, 10) });
+        // Slide 3
+        const RP = ['Mantap! Pembiasan = cahaya membelok di batas dua medium.', 'Sip! Renggang ke rapat mendekati normal, kebalikannya menjauhi.', 'Keren! Rumus Snellius itu senjata utama Agen Sains.', 'Yes! Dari kolam sampai pelangi, semuanya pembiasan.'];
+        $$('.ck').forEach(c => c.onclick = e => { c.classList.toggle('dn'); const n = $$('.ck.dn').length; $('#cnt').textContent = n + '/4'; if (c.classList.contains('dn')) { bu(...pos(e), ['#F59E0B', '#fff'], 14); say(n == 4 ? 'SEMUA TARGET TERKUNCI! Kamu luar biasa!' : RP[c.dataset.k], 'cheer') } })
+        // Slide 4 pencil
+        const pr = $('#pr'), P = () => { const t = pr.value * Math.PI / 180, s = Math.sin(t), c = Math.cos(t), A = [200 - 110 * s, 190 + 110 * c / 1.33]; $('#pa').setAttribute('d', `M${200 + 150 * s} ${190 - 150 * c}L200 190L${A[0]} ${A[1]}`); $('#pb').setAttribute('d', `M200 190L${200 - 110 * s} ${190 + 110 * c}`); $('#pe').setAttribute('cx', 200 + 150 * s); $('#pe').setAttribute('cy', 190 - 150 * c); $('#pc').setAttribute('cx', A[0]); $('#pc').setAttribute('cy', A[1]); $('#pt').innerHTML = `miring ${pr.value}° → patahan tampak ≈ ${(Math.atan(1.33 * Math.tan(t)) * 180 / Math.PI).toFixed(0)}°` };
+        pr.oninput = P; P(); pr.onchange = () => say(+pr.value ? 'Lihat patahannya! Garis putus-putus = posisi asli pensil.' : 'Pensil tegak lurus? Nggak tampak patah. Pembiasan jelas kalau miring.', +pr.value ? 'wow' : 'think');
+        // Sim factory
+        const MX = [['Air', 1.33, '#06B6D4'], ['Kaca', 1.5, '#8B5CF6'], ['Intan', 2.42, '#FF6B6B'], ['Es', 1.31, '#93C5FD']];
+        function mk(id, o) {
+            const h = $(id), L = 170, mx = o.sel ? MX : [MX[0]]; let on = !o.off;
+            h.innerHTML = `<svg class="sv" viewBox="0 0 560 380"><rect width="560" height="190" fill="#fff" opacity=".05"/><rect class="w" y="190" width="560" height="190" opacity=".35"/><text class="lb" x="14" y="28">UDARA · n = 1,00</text><text class="lb lw" x="14" y="364"></text><line x1="280" y1="8" x2="280" y2="372" stroke="#fff" stroke-dasharray="7 7" opacity=".6"/><text class="lb" x="288" y="22">garis normal</text><line x1="0" y1="190" x2="560" y2="190" stroke="#fff" opacity=".5"/><g class="ry"><line class="a" stroke="#FF6B6B" stroke-width="5" stroke-linecap="round" style="filter:drop-shadow(0 0 6px #FF6B6B)"/><line class="b" stroke="#F59E0B" stroke-width="5" stroke-linecap="round" style="filter:drop-shadow(0 0 6px #F59E0B)"/></g><g class="ld"><rect x="-44" y="-10" width="44" height="20" rx="6" fill="#1e293b" stroke="#fff"/><rect x="-34" y="-10" width="9" height="20" fill="#FF6B6B"/></g><text class="tx ti"></text><text class="tx tr" text-anchor="end"></text></svg><div class="ctl">${o.sel ? `<select>${MX.map((m, i) => `<option value="${i}">${m[0]} (n=${m[1]})</option>`).join('')}</select>` : ''}<label>Sudut datang i <input type="range" min="${o.min}" max="${o.max}" value="${o.v}"></label><b class="rd"></b><button class="bt xs"></button></div>`;
+            const q = s => h.querySelector(s), sl = q('input'), se = q('select'), bt = q('button'); let D;
+            const u = () => {
+                const i = +sl.value, m = mx[se ? se.value : 0], n1 = o.up ? m[1] : 1, n2 = o.up ? 1 : m[1], ir = i * Math.PI / 180, r = Math.asin(n1 / n2 * Math.sin(ir)), rd = r * 180 / Math.PI, g = o.up ? 1 : -1, sx = 280 - L * Math.sin(ir), sy = 190 + g * L * Math.cos(ir); D = [i, rd, m];
+                q('.w').setAttribute('fill', m[2]); q('.lw').textContent = `${m[0].toUpperCase()} · n = ${m[1].toFixed(2)}`;
+                const a = q('.a'), b = q('.b'); a.setAttribute('x1', sx); a.setAttribute('y1', sy); a.setAttribute('x2', 280); a.setAttribute('y2', 190); b.setAttribute('x1', 280); b.setAttribute('y1', 190); b.setAttribute('x2', 280 + L * Math.sin(r)); b.setAttribute('y2', 190 - g * L * Math.cos(r));
+                q('.ld').setAttribute('transform', `translate(${sx} ${sy}) rotate(${Math.atan2(190 - sy, 280 - sx) * 180 / Math.PI})`); q('.ry').style.opacity = on ? 1 : 0; q('.ld').style.opacity = on ? 1 : .5;
+                const ti = q('.ti'), tr = q('.tr'); ti.textContent = `i = ${i}°`; ti.setAttribute('x', 296); ti.setAttribute('y', 190 + g * 44); tr.textContent = `r = ${rd.toFixed(1)}°`; tr.setAttribute('x', 264); tr.setAttribute('y', 190 - g * 34);
+                q('.rd').innerHTML = o.rd(i, rd, m); bt.textContent = (on ? 'Matikan' : 'Nyalakan') + ' Laser'
+            };
+            const sy = () => { const [t, m] = o.say(...D); say(t, m) };
+            sl.oninput = u; sl.onchange = sy; if (se) se.onchange = () => { u(); sy() }; bt.onclick = () => { on = !on; u(); say(on ? 'Laser ON! Fokus ke garis putus-putus itu, itu garis normal.' : 'Laser OFF. Nyalakan lagi kalau mau lanjut.', on ? 'laser' : 'point') }; u()
         }
-
-        function nextSlide() {
-            if (currentSlide < totalSlides) {
-                currentSlide++;
-                updateSlides();
-            }
-        }
-
-        function prevSlide() {
-            if (currentSlide > 1) {
-                currentSlide--;
-                updateSlides();
-            }
-        }
-
-        // Initialize
-        updateSlides();
+        mk('#sim5', { off: 1, min: 5, max: 75, v: 45, up: 0, rd: (i, r) => `r = ${r.toFixed(1)}° &lt; i = ${i}°`, say: (i, r) => [`Udara ke air: r cuma ${r.toFixed(0)}°, lebih kecil dari i (${i}°). Sinar mendekati garis normal!`, 'laser'] });
+        mk('#sim6', { min: 5, max: 45, v: 30, up: 1, rd: (i, r) => `i = ${i}° &lt; r = ${r.toFixed(1)}°`, say: (i, r) => [`Air ke udara: r = ${r.toFixed(0)}°, lebih besar dari i (${i}°). Sinar menjauhi garis normal!`, 'point'] });
+        mk('#sim11', { sel: 1, min: 0, max: 80, v: 40, up: 0, rd: (i, r, m) => `n₁ sin i = ${Math.sin(i * Math.PI / 180).toFixed(3)} · n₂ sin r = ${(m[1] * Math.sin(r * Math.PI / 180)).toFixed(3)} ✓`, say: (i, r, m) => [i == 0 ? 'Sudut 0°: sinar menembus lurus, nggak membelok. Normal banget!' : `Analisis lab: udara→${m[0]}, i=${i}°, r=${r.toFixed(1)}°. Sinar membelok ${(i - r).toFixed(1)}° ke arah normal. ${m[1] > 2 ? 'Intan bikin pembelokan paling ekstrem!' : ''}`, i == 0 ? 'think' : 'wow'] });
+        // Slide 7 formula
+        const F = { a: 'n₁ = indeks bias medium asal cahaya. Udara nilainya 1,00.', b: 'i = sudut datang, diukur dari garis normal (bukan dari permukaan!).', c: 'n₂ = indeks bias medium tujuan. Makin besar, makin lambat cahaya di dalamnya.', d: 'r = sudut bias, sudut sinar setelah membelok, juga diukur dari garis normal.' };
+        $('#fm').onclick = e => e.stopPropagation(); $('#fm').onmouseover = $('#fm').ontouchstart = e => { const k = e.target.dataset && e.target.dataset.k; if (k) say(F[k], 'point') };
+        $('#fm').addEventListener('click', e => { const k = e.target.dataset.k; if (k) { say(F[k], 'point'); bu(...pos(e), undefined, 8) } });
+        $$('.fc[data-s]').forEach(c => c.addEventListener('click', () => { c.classList.toggle('fl'); if (c.classList.contains('fl')) say(c.dataset.s, 'wow') }));
+        // Slide 8
+        $('#gd').innerHTML = [['Udara', 1, '#e2e8f0'], ['Air', 1.33, '#06B6D4'], ['Kaca', 1.5, '#8B5CF6'], ['Intan', 2.42, '#FF6B6B']].map((m, i) => `<div class="g cd" onclick="sm(${i},'${m[0]}',${m[1]})"><i style="background:radial-gradient(circle at 30% 30%,#fff,${m[2]})"></i><h3>${m[0]}</h3><b>n = ${m[1].toFixed(2)}</b><small>v ≈ ${Math.round(3e5 / m[1]).toLocaleString('id')} km/s</small><u><s style="width:${100 / m[1]}%"></s></u></div>`).join('');
+        function sm(i, nm, n) { $$('.cd').forEach((c, j) => c.classList.toggle('sel', i == j)); mas.style.setProperty('--sp', (.12 * n * n).toFixed(2) + 's'); mas.classList.add('run'); clearTimeout(rt); rt = setTimeout(() => mas.classList.remove('run'), 6000); const v = Math.round(3e5 / n).toLocaleString('id'); $('#sp').textContent = `${nm}: n = ${n.toFixed(2)} → v = c/n ≈ ${v} km/s`; say(n < 1.1 ? 'Udara! Cahaya ngebut, aku juga ngebut!' : n > 2 ? 'Intan n=2,42... cahaya jadi pelan banget. Aku... capek...' : `${nm}: cahaya melambat, jadi larinya santai.`, 'wow') }
+        // Slide 10
+        const RB = ['#ef4444', '#f97316', '#facc15', '#22c55e', '#38bdf8', '#6366f1', '#a855f7'];
+        $('#sc0').innerHTML = `<defs><linearGradient id="k0" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1e3a8a"/><stop offset="1" stop-color="#7dd3fc"/></linearGradient></defs><rect width="640" height="300" fill="url(#k0)"/><circle cx="60" cy="60" r="56" fill="#FDE68A" opacity=".25"/><circle cx="60" cy="60" r="34" fill="#FDE68A"/>${RB.map((c, i) => { const r = 230 - i * 16; return `<path d="M${320 - r} 270A${r} ${r} 0 0 1 ${320 + r} 270" fill="none" stroke="${c}" stroke-width="15" opacity=".85"/>` }).join('')}<ellipse cx="320" cy="310" rx="420" ry="50" fill="#166534"/>`;
+        $('#sc1').innerHTML = `<defs><linearGradient id="k1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fb923c"/><stop offset="1" stop-color="#fef3c7"/></linearGradient></defs><rect width="640" height="300" fill="url(#k1)"/><circle cx="540" cy="60" r="34" fill="#fff" opacity=".9"/><rect y="170" width="640" height="130" fill="#d6a45c"/><path d="M300 170H340L540 300H100Z" fill="#334155"/><path d="M320 180V300" stroke="#fde68a" stroke-width="4" stroke-dasharray="14 12"/><g class="mr"><ellipse cx="320" cy="182" rx="130" ry="9" fill="#7dd3fc" opacity=".85"/><ellipse cx="320" cy="190" rx="90" ry="5" fill="#e0f2fe" opacity=".7"/></g>`;
+        const CAP = ['Pelangi: cahaya matahari dibiaskan, dipantulkan, lalu diurai (dispersi) jadi 7 warna oleh tetes air hujan. Klik pelanginya!', 'Fatamorgana: udara dekat tanah yang panas lebih renggang, jadi cahaya langit dibiaskan terus sampai tampak seperti genangan air. Klik jalannya!']; let tab = 0;
+        const tb = k => { tab = k; $$('.tb').forEach((b, i) => b.classList.toggle('on', i == k)); $('#sc0').style.display = k ? 'none' : ''; $('#sc1').style.display = k ? '' : 'none'; $('#cap').textContent = CAP[k]; say(k ? 'Jalan panas kelihatan basah? Itu ilusi pembiasan!' : 'Pelangi itu pembiasan + dispersi cahaya. Keren kan?', 'wow') };
+        $$('.tb').forEach((b, i) => b.onclick = () => tb(i)); $('#cap').textContent = CAP[0];
+        $('#scn').onclick = e => { bu(...pos(e), RB, 21); say(tab ? 'Wuss! Cahaya langit dibelokkan udara panas. Matamu ketipu!' : 'Boom! Spektrum warna: merah sampai ungu. Merah dibiaskan paling kecil.', 'cheer') };
+        // Slide 12
+        function op() { $('#md').classList.remove('hid'); for (let i = 0; i < 6; i++)setTimeout(() => bu(300 + Math.random() * 900, 150 + Math.random() * 250, RB, 18), i * 150); say('Selamat! Kamu resmi jadi Master Pembiasan Cahaya!', 'grad') }
+        function rs() { $('#md').classList.add('hid'); $$('.ck').forEach(c => c.classList.remove('dn')); $('#cnt').textContent = '0/4'; go(0) }
+        go(0);
     </script>
 </body>
+
 </html>
-```
